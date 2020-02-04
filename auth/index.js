@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
   db.get(`SELECT * FROM users WHERE email = $email`, {
     $email: req.body.email
   }, (err, row) => {
-    if (bcrypt.compareSync(req.body.password, row.password)) {
+    if (row && bcrypt.compareSync(req.body.password, row.password)) {
       res.json({
         message: 'success',
         token: jwt.sign({
