@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 
 const SALT_ROUNDS = 10
 const SECRET = process.env.SECRET
+const CLAIMS_AUD = 'hasu'
 
 const app = express()
 app.use(bodyParser.json({ limit: 1024 }))
@@ -43,7 +44,12 @@ app.post('/login', (req, res) => {
       res.json({
         message: 'success',
         token: jwt.sign({
-          name: row.name
+          name: row.name,
+          aud: CLAIMS_AUD,
+          hasu: {
+            'x-hasura-default-role': 'admin',
+            'x-hasura-allowed-roles': ['admin']
+          }
         }, SECRET)
       })
     } else {
